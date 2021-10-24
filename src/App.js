@@ -1,24 +1,27 @@
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
+import { Container } from 'react-bootstrap';
+import SearchByZip from './components/SearchByZip';
+import { API_KEY, API_BASE_URL } from './apis/keys';
+import FiveDaysForcast from './components/FiveDaysForcast';
+import FetchData from './hooks/FetchData';
 
 function App() {
+  const {data, error, isLoading, setUrl} = FetchData();
+  const zipSearch = (zipcode) => setUrl(`${API_BASE_URL}/data/2.5/forecast?zip=${zipcode}&appid=${API_KEY}&units=imperial`);
+
+  const getContent = () => {
+    if(error) return <h3>Error fetching data: zip code not found</h3>
+    if(!data && isLoading) return <h4>LOADING...</h4>
+    if(!data) return null;
+    return <FiveDaysForcast forcast={data} />
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container className="App">
+      <SearchByZip onSearch={zipSearch} />
+      {getContent()}
+    </Container>
   );
 }
 
