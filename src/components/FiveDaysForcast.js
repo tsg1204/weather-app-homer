@@ -9,11 +9,13 @@ const FiveDaysForcast = ({ forcast }) => {
   const toggleWeather = (e) => {
     setSelectedIndex(e);
   }
-  //console.log(forcast[0].uvi)
+  const UVI = forcast[0].uvi;
+  console.log(UVI)
   
   useEffect(() => {
-    switch (forcast[0].uvi) {
-      case (forcast[0].uvi >= 3 && forcast[0].uvi <= 5):
+    switch (UVI) {
+      case (UVI >= 3 && UVI <= 5):
+        console.log(UVI)
         setCurrentUVI('Moderate UV index');
         break;
       case (forcast[0].uvi >= 6 && forcast[0].uvi <= 7):
@@ -27,8 +29,10 @@ const FiveDaysForcast = ({ forcast }) => {
         break;
       default:
         setCurrentUVI('Low UV index');
+        console.log(currentUVI)
     }
-  }, [forcast]);
+    return currentUVI;
+  }, [forcast[0].uvi]);
 
   return (
     <>

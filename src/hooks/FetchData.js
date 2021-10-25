@@ -37,34 +37,25 @@ const FetchData = (initialUrl) => {
         });  
   }, [url]);
 
-  //fetching uvi index
+  //fetching uvi index and the rest of data we need
   useEffect(() => {
     if(!lon) return;
     setIsLoading(true);
-    setData('');
-    setError('');
 
     fetch(`${API_BASE_URL}/data/2.5/onecall?lat=${lat}&lon=${lon}&appid=${API_KEY}`)
         .then((response) => response.json())
-        .then((data) => {
+        .then((data2) => {
             setIsLoading(false);
-            if(data.cod >= 400) {
-                setError(data.message);
+            if(data2.cod >= 400) {
+                setError(data2.message);
                 return;
             }
-
-            setUvi(data.current.uvi);
+            setUvi(data2.current.uvi);
         })
         .catch((error) => {
             setIsLoading(false);
             setError(error);
         });  
-  }, [lon, lat, uvi]);
-
-  //fetching data to display
-  useEffect(() => {
-    if(!city) return;
-    setIsLoading(true);
 
     fetch(`${API_BASE_URL}/data/2.5/forecast?q=${city}&appid=${API_KEY}&units=imperial`)
         .then((response) => response.json())
@@ -76,14 +67,17 @@ const FetchData = (initialUrl) => {
             }
             //add uvi to data 
             data.uvi = uvi;
+            console.log(uvi)
             setData(formatForcastData(data));
         })
         .catch((error) => {
             setIsLoading(false);
             setError(error);
-        });  
-  }, [city]);
+        });
+  }, [lon, lat, uvi, city]);
 
+
+console.log(data)
   return { data, error, isLoading, setUrl };
 };
 
